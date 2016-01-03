@@ -53,9 +53,8 @@ public class CustomGridAdapter extends BaseAdapter {
                  .load("http://image.tmdb.org/t/p/w500/" + image[i])
                  .into(imageView);
         } else {
-            grid = (View) view;
+            grid = view;
         }
-
         return grid;
 
     }
