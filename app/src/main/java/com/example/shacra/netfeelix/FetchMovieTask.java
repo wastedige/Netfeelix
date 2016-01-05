@@ -23,6 +23,7 @@ import java.net.URL;
 public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
     GridView grid;
     Context targetContext;
+    public String forecastJsonStr;
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     public FetchMovieTask(Context targetContext, GridView grid) {
@@ -39,7 +40,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
         BufferedReader reader = null;
 
         // Will contain the raw JSON response as a string.
-        String forecastJsonStr = null;
+        forecastJsonStr = null;
 
         try {
             // Construct the URL for the OpenWeatherMap query
@@ -122,11 +123,11 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
             grid.setAdapter(new CustomGridAdapter(targetContext, result));
     }
 
-    private String[] getPopularMoviesFromJson(String forecastJsonStr)
+    private String[] getPopularMoviesFromJson(String movieJsonStr)
             throws JSONException {
 
 
-        JSONObject movieJson = new JSONObject(forecastJsonStr);
+        JSONObject movieJson = new JSONObject(movieJsonStr);
         JSONArray resultsArray = movieJson.getJSONArray("results");
 
         // OWM returns daily forecasts based upon the local time of the city that is being
