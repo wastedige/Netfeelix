@@ -50,10 +50,12 @@ public class MovieDetailActivity extends Activity {
         JSONObject singleMovie = resultsArray.getJSONObject(position);
 
 
-//        Log.v("LOG", overview + "");
+        Log.v("LOG", movieJsonStr + "");
         showMovieDetails(
                 singleMovie.getString("poster_path"),
+                singleMovie.getString("original_title"),
                 singleMovie.getString("overview")
+
         );
 
         return;
@@ -65,7 +67,8 @@ public class MovieDetailActivity extends Activity {
                 .load("http://image.tmdb.org/t/p/w780/" + params[0])
                 .into(detailed_image);
 
-        detailed_text_overview.setText(params[1]);
+        detailed_text_title.setText(params[1]);
+        detailed_text_overview.setText(params[2]);
 
     }
 }
