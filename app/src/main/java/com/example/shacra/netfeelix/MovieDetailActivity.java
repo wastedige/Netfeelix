@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ public class MovieDetailActivity extends Activity {
 
     String jsonString;
     int position;
-    ImageView detailed_image;
+    ImageView detailed_image, rating_image;
     TextView detailed_text_title;
     TextView detailed_text_overview;
 
@@ -27,6 +28,7 @@ public class MovieDetailActivity extends Activity {
         setContentView(R.layout.activity_movie_detail);
 
         detailed_image = (ImageView) findViewById(R.id.detailed_image);
+        rating_image = (ImageView) findViewById(R.id.rating_image);
         detailed_text_title = (TextView) findViewById(R.id.detailed_text_title);
         detailed_text_overview = (TextView) findViewById(R.id.detailed_text_overview);
 
@@ -50,8 +52,9 @@ public class MovieDetailActivity extends Activity {
         JSONObject singleMovie = resultsArray.getJSONObject(position);
 
 
-        Log.v("LOG", movieJsonStr + "");
+        Log.v("LOG", singleMovie + "");
         showMovieDetails(
+                singleMovie.getBoolean("adult"),
                 singleMovie.getString("poster_path"),
                 singleMovie.getString("original_title"),
                 singleMovie.getString("overview")
@@ -61,7 +64,7 @@ public class MovieDetailActivity extends Activity {
         return;
     }
 
-    private void showMovieDetails(String... params) {
+    private void showMovieDetails(Boolean adult, String... params ) {
 
         Glide.with(this)
                 .load("http://image.tmdb.org/t/p/w780/" + params[0])
@@ -69,6 +72,9 @@ public class MovieDetailActivity extends Activity {
 
         detailed_text_title.setText(params[1]);
         detailed_text_overview.setText(params[2]);
+        if (adult == true)
+            detailed_image.setVisibility(View.VISIBLE);
+
 
     }
 }
