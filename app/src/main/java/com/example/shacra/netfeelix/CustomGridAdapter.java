@@ -25,12 +25,12 @@ public class CustomGridAdapter extends BaseAdapter {
     @Override
     public int getCount() {
 
-        return image.length;
+        return image.length / 2;
     }
 
     @Override
     public Object getItem(int i) {
-        return image[i];
+        return image[i * 2 + 1];
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CustomGridAdapter extends BaseAdapter {
             ImageView imageView = (ImageView)grid.findViewById(R.id.image);
 
             Glide.with(context)
-                 .load("http://image.tmdb.org/t/p/w500/" + image[i])
+                 .load("http://image.tmdb.org/t/p/w500/" + image[i * 2 + 1])
                  .into(imageView);
         } else {
             grid = view;

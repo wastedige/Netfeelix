@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,7 +53,6 @@ public class MovieDetailActivity extends Activity {
 
         Log.v("LOG", singleMovie + "");
         showMovieDetails(
-                singleMovie.getBoolean("adult"),
                 singleMovie.getString("poster_path"),
                 singleMovie.getString("original_title"),
                 singleMovie.getString("overview")
@@ -64,7 +62,7 @@ public class MovieDetailActivity extends Activity {
         return;
     }
 
-    private void showMovieDetails(Boolean adult, String... params ) {
+    private void showMovieDetails(String... params ) {
 
         Glide.with(this)
                 .load("http://image.tmdb.org/t/p/w780/" + params[0])
@@ -72,8 +70,7 @@ public class MovieDetailActivity extends Activity {
 
         detailed_text_title.setText(params[1]);
         detailed_text_overview.setText(params[2]);
-        if (adult == true)
-            detailed_image.setVisibility(View.VISIBLE);
+
 
 
     }

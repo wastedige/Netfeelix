@@ -20,7 +20,7 @@ import java.net.URL;
 /**
  * Created by shacra on 1/3/2016.
  */
-public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
+public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
     GridView grid;
     Context targetContext;
     public String forecastJsonStr;
@@ -32,7 +32,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
     }
 
     @Override
-    protected String[] doInBackground(Void... params) {
+    protected String[] doInBackground(String... params) {
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -43,16 +43,15 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
         forecastJsonStr = null;
 
         try {
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
+
+            // http://docs.themoviedb.apiary.io/#reference/discover/discovermovie/get
             final String FORECAST_BASE_URL =
-                    "http://api.themoviedb.org/3/discover/movie?";
-            final String SORT = "sort_by";
+                    "http://api.themoviedb.org/3/discover/movie?" + params[0];
+//            final String SORT = "sort_by";
             final String APPID_PARAM = "api_key";
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .appendQueryParameter(SORT, "popularity.desc")
+//                    .appendQueryParameter(SORT, "popularity.desc")
                     .appendQueryParameter(APPID_PARAM, "-")
                     .build();
 
@@ -108,7 +107,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
         }
 
         try {
-            return getPopularMoviesFromJson(forecastJsonStr);
+            return getMovieThumbnailsFromJson(forecastJsonStr);
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -123,10 +122,10 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
             grid.setAdapter(new CustomGridAdapter(targetContext, result));
     }
 
-    private String[] getPopularMoviesFromJson(String movieJsonStr)
+    private String[] getMovieThumbnailsFromJson(String movieJsonStr)
             throws JSONException {
 
-
+        Log.v("singleMovie", movieJsonStr);
         JSONObject movieJson = new JSONObject(movieJsonStr);
         JSONArray resultsArray = movieJson.getJSONArray("results");
 
@@ -134,15 +133,17 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
         // asked for, which means that we need to know the GMT offset to translate this data
         // properly.
 
-        String[] resultStrs = new String[resultsArray.length()];
+        String[] resultStrs = new String[resultsArray.length() * 2];
 
         for (int i = 0; i < resultsArray.length(); i++) {
 
 
             JSONObject singleMovie = resultsArray.getJSONObject(i);
+            String id = singleMovie.getString("id");
             String imageAddress = singleMovie.getString("poster_path");
 
-            resultStrs[i] = imageAddress;
+            resultStrs[i * 2] = id;
+            resultStrs[i * 2 + 1] = imageAddress;
         }
 
         for (String s : resultStrs) {

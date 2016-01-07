@@ -7,4 +7,19 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/sort"
+        android:title="Sort"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item android:id="@+id/arrange_popularity"
+                android:title="Popularity" />
+            <item android:id="@+id/arrange_recent"
+                android:title="Highest R rated" />
+        </menu>
+    </item>
+
 </menu>
