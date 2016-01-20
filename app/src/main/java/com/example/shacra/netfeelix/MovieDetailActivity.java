@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,10 +64,18 @@ public class MovieDetailActivity extends Activity {
     }
 
     private void showMovieDetails(String... params ) {
-
+        final String image_address = "http://image.tmdb.org/t/p/w780/" + params[0];
         Glide.with(this)
-                .load("http://image.tmdb.org/t/p/w780/" + params[0])
+                .load(image_address)
                 .into(detailed_image);
+
+        detailed_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetWallpaper wallpaper_setter = new SetWallpaper(getApplicationContext());
+                wallpaper_setter.execute( image_address );
+            }
+        });
 
         detailed_text_title.setText(params[1]);
         detailed_text_overview.setText(params[2]);

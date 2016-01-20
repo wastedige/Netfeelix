@@ -39,6 +39,8 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
+
+
         // Will contain the raw JSON response as a string.
         forecastJsonStr = null;
 
@@ -147,7 +149,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
         }
 
         for (String s : resultStrs) {
-            Log.v("ResultString", "entry: " + s);
+//            Log.v("ResultString", "entry: " + s);
         }
         return resultStrs;
 
