@@ -9,28 +9,29 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by shacra on 12/31/2015.
  */
 public class CustomGridAdapter extends BaseAdapter {
-    private final String[] image;
+    private ArrayList<MovieItem> movieItems;
     Context context;
 
-    public CustomGridAdapter(Context context, String[] image ) {
+    public CustomGridAdapter(Context context, ArrayList<MovieItem> movieItems) {
+        this.movieItems = movieItems;
         this.context = context;
-        this.image = image;
     }
 
     @Override
     public int getCount() {
-
-        return image.length / 2;
+        return movieItems.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return image[i * 2 + 1];
+    public MovieItem getItem(int i) {
+        return movieItems.get(i);
     }
 
     @Override
@@ -48,9 +49,9 @@ public class CustomGridAdapter extends BaseAdapter {
 
             grid = inflater.inflate(R.layout.grid_cell, null);
             ImageView imageView = (ImageView)grid.findViewById(R.id.image);
-
+            String url = "http://image.tmdb.org/t/p/w500/" + movieItems.get(i).imageurl;
             Glide.with(context)
-                 .load("http://image.tmdb.org/t/p/w500/" + image[i * 2 + 1])
+                 .load(url)
                  .into(imageView);
         } else {
             grid = view;
@@ -58,4 +59,12 @@ public class CustomGridAdapter extends BaseAdapter {
         return grid;
 
     }
+
+    public void addItem() {
+        movieItems.add(
+                movieItems.size(),
+                movieItems.get(0)
+        );
+    }
+
 }

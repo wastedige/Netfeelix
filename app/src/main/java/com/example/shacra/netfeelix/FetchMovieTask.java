@@ -16,11 +16,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by shacra on 1/3/2016.
  */
-public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
+public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>> {
     GridView grid;
     Context targetContext;
     public String forecastJsonStr;
@@ -32,7 +33,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
     }
 
     @Override
-    protected String[] doInBackground(String... params) {
+    protected ArrayList<MovieItem> doInBackground(String... params) {
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -118,40 +119,37 @@ public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
         return null;
     }
 
+
+
     @Override
-    protected void onPostExecute(String[] result) {
+    protected void onPostExecute(ArrayList<MovieItem> result) {
         if (result != null)
             grid.setAdapter(new CustomGridAdapter(targetContext, result));
     }
 
-    private String[] getMovieThumbnailsFromJson(String movieJsonStr)
+    private ArrayList<MovieItem> getMovieThumbnailsFromJson(String movieJsonStr)
             throws JSONException {
 
-        Log.v("singleMovie", movieJsonStr);
+        ArrayList<MovieItem> tempMovieItemList = new ArrayList<>();
+
+//        Log.v("singleMovie", movieJsonStr);
         JSONObject movieJson = new JSONObject(movieJsonStr);
         JSONArray resultsArray = movieJson.getJSONArray("results");
-
-        // OWM returns daily forecasts based upon the local time of the city that is being
-        // asked for, which means that we need to know the GMT offset to translate this data
-        // properly.
-
-        String[] resultStrs = new String[resultsArray.length() * 2];
 
         for (int i = 0; i < resultsArray.length(); i++) {
 
 
             JSONObject singleMovie = resultsArray.getJSONObject(i);
-            String id = singleMovie.getString("id");
-            String imageAddress = singleMovie.getString("poster_path");
+            MovieItem temp_movie_item = new MovieItem(
+                    singleMovie.getString("id"),
+                    singleMovie.getString("poster_path"),
+                    singleMovie.getString("title")
+            );
 
-            resultStrs[i * 2] = id;
-            resultStrs[i * 2 + 1] = imageAddress;
-        }
+            tempMovieItemList.add(i, temp_movie_item );
 
-        for (String s : resultStrs) {
-//            Log.v("ResultString", "entry: " + s);
         }
-        return resultStrs;
+        return tempMovieItemList;
 
     }
 }
