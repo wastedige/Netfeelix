@@ -24,13 +24,16 @@ import java.util.ArrayList;
 public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>> {
     GridView grid;
     Context targetContext;
-    public String forecastJsonStr;
+    String forecastJsonStr;
+    CallbackInterface callback;
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-    public FetchMovieTask(Context targetContext, GridView grid) {
+    public FetchMovieTask(Context targetContext, GridView grid, CallbackInterface callback) {
         this.grid = grid;
         this.targetContext = targetContext;
+        this.callback = callback;
     }
+
 
     @Override
     protected ArrayList<MovieItem> doInBackground(String... params) {
@@ -109,6 +112,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
             }
         }
 
+
         try {
             return getMovieThumbnailsFromJson(forecastJsonStr);
 
@@ -119,20 +123,20 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
         return null;
     }
 
-
-
     @Override
     protected void onPostExecute(ArrayList<MovieItem> result) {
         if (result != null)
-            grid.setAdapter(new CustomGridAdapter(targetContext, result));
+            callback.onAsyncComplete(result);
+//        if (result != null)
+//            adapter.AddNewItemsAndRefresh(result);
     }
+
 
     private ArrayList<MovieItem> getMovieThumbnailsFromJson(String movieJsonStr)
             throws JSONException {
 
         ArrayList<MovieItem> tempMovieItemList = new ArrayList<>();
 
-//        Log.v("singleMovie", movieJsonStr);
         JSONObject movieJson = new JSONObject(movieJsonStr);
         JSONArray resultsArray = movieJson.getJSONArray("results");
 
@@ -143,12 +147,13 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
             MovieItem temp_movie_item = new MovieItem(
                     singleMovie.getString("id"),
                     singleMovie.getString("poster_path"),
-                    singleMovie.getString("title")
+                    singleMovie.getString("title"),
+                    singleMovie.getString("overview")
             );
-
-            tempMovieItemList.add(i, temp_movie_item );
-
+            tempMovieItemList.add(i, temp_movie_item);
+            //Log.v("Movies fetched", i + " " + temp_movie_item.getTitle());
         }
+
         return tempMovieItemList;
 
     }

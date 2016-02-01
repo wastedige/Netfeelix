@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class MainActivityFragment extends Fragment {
@@ -20,8 +23,18 @@ public class MainActivityFragment extends Fragment {
     GridView grid;
     Context currentContext;
     FetchMovieTask fetcher;
-    public MainActivityFragment() {
+    CustomGridAdapter custom_adapter;
+    CallbackInterface callback;
+    public ArrayList<MovieItem> movieItems = new ArrayList<>();
 
+    public MainActivityFragment() {
+        callback = new CallbackInterface() {
+            @Override
+            public void onAsyncComplete(ArrayList<MovieItem> fetched_items) {
+                Log.v("onAsyncComplete", fetched_items.size() + "");
+                AddNewItemsAndRefresh(fetched_items);
+            }
+        };
     }
 
     @Override
@@ -46,11 +59,11 @@ public class MainActivityFragment extends Fragment {
         switch (item.toString()) {
             case "Popularity":
                 Log.v("OPTIONS", "Popularity");
-                fetcher = new FetchMovieTask(currentContext, grid);
+                fetcher = new FetchMovieTask(currentContext, grid, callback);
                 fetcher.execute("sort_by=popularity.desc");
                 return true;
             case "Highest R rated":
-                fetcher = new FetchMovieTask(currentContext, grid);
+                fetcher = new FetchMovieTask(currentContext, grid, callback);
                 fetcher.execute("certification_country=US&certification=R&sort_by=vote_average.desc");
                 Log.v("OPTIONS", "Highest R rated");
                 return true;
@@ -71,7 +84,10 @@ public class MainActivityFragment extends Fragment {
         grid = (GridView) fragView.findViewById(R.id.gridview);
         currentContext = getActivity();
 
-        fetcher = new FetchMovieTask(currentContext, grid);
+        custom_adapter = new CustomGridAdapter(currentContext);
+        grid.setAdapter(custom_adapter);
+
+        fetcher = new FetchMovieTask(currentContext, grid, callback);
         fetcher.execute("sort_by=popularity.desc");
 
         // grid.setAdapter(new CustomGridAdapter(getActivity(), imageArray));
@@ -79,25 +95,46 @@ public class MainActivityFragment extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(currentContext, "item" + i, Toast.LENGTH_LONG).show();
+                Toast.makeText(currentContext, "item" + i, Toast.LENGTH_LONG).show();
                 FetchMovieDetailTask(i);
             }
         });
+
+        grid.setOnScrollListener(new InfiniteScrollListener(5) {
+            @Override
+            public void loadMore(int page, int totalItemsCount) {
+                Log.v("* Loadmore ", "total " + totalItemsCount + " page  " + page);
+                fetcher = new FetchMovieTask(currentContext, grid, callback);
+                fetcher.execute("sort_by=popularity.desc&page=" + page );
+            }
+        });
+
         return fragView;
     }
 
     public void FetchMovieDetailTask(int pos) {
-        if (fetcher.forecastJsonStr != null) {
             Intent intent = new Intent(currentContext, MovieDetailActivity.class);
-            intent.putExtra("movieJson", fetcher.forecastJsonStr);
-            intent.putExtra("position", pos);
+            intent.putExtra("url", movieItems.get(pos).getImageurl());
+            intent.putExtra("title", movieItems.get(pos).getTitle());
+            intent.putExtra("overview", movieItems.get(pos).getOverview());
             startActivity(intent);
-        }
 
     }
 
+    public void AddNewItemsAndRefresh(ArrayList<MovieItem> new_items) {
+        movieItems.addAll(new_items);
+        printAll(new_items);
+        custom_adapter.updateItems(movieItems);
+        //notifyDataSetChanged();
 
+    }
 
-
+    public void printAll(ArrayList<MovieItem> mArrayList) {
+        String s = "";
+        for (MovieItem m: mArrayList) {
+            s += (m.title + ", ");
+        }
+        Log.v("MovieItems", s);
+    }
 
 }

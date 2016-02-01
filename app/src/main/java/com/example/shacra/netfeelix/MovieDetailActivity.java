@@ -3,16 +3,11 @@ package com.example.shacra.netfeelix;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MovieDetailActivity extends Activity {
 
@@ -33,34 +28,12 @@ public class MovieDetailActivity extends Activity {
         detailed_text_overview = (TextView) findViewById(R.id.detailed_text_overview);
 
         Intent intent = getIntent();
-        jsonString = intent.getStringExtra("movieJson");
-        position = intent.getIntExtra("position", -1);
+        showMovieDetails(new String[] {
+                intent.getStringExtra("url"),
+                intent.getStringExtra("title"),
+                intent.getStringExtra("overview")
+        });
 
-        try {
-            parseMovieDetailsFromJson(jsonString, position);
-        } catch (JSONException e) {
-            Log.e("DetailActivity Error", e.getMessage(), e);
-            e.printStackTrace();
-        }
-    }
-
-    private void parseMovieDetailsFromJson(String movieJsonStr, int position)
-            throws JSONException {
-        JSONObject movieJson = new JSONObject(movieJsonStr);
-        JSONArray resultsArray = movieJson.getJSONArray("results");
-        // single out the JSON string for the selected movie
-        JSONObject singleMovie = resultsArray.getJSONObject(position);
-
-
-        Log.v("LOG", singleMovie + "");
-        showMovieDetails(
-                singleMovie.getString("poster_path"),
-                singleMovie.getString("original_title"),
-                singleMovie.getString("overview")
-
-        );
-
-        return;
     }
 
     private void showMovieDetails(String... params ) {

@@ -7,11 +7,13 @@ public class MovieItem {
     String id;
     String imageurl;
     String title;
+    String overview;
 
-    public MovieItem(String id, String imageurl, String title) {
+    public MovieItem(String id, String imageurl, String title, String overview) {
         this.id = id;
         this.imageurl = imageurl;
         this.title = title;
+        this.overview = overview;
     }
 
     public String getId() {
@@ -36,5 +38,13 @@ public class MovieItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 }

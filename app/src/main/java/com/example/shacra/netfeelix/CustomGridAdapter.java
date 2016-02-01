@@ -16,13 +16,13 @@ import java.util.ArrayList;
  * Created by shacra on 12/31/2015.
  */
 public class CustomGridAdapter extends BaseAdapter {
-    private ArrayList<MovieItem> movieItems;
+    private ArrayList<MovieItem> movieItems = new ArrayList<>();
     Context context;
 
-    public CustomGridAdapter(Context context, ArrayList<MovieItem> movieItems) {
-        this.movieItems = movieItems;
+    public CustomGridAdapter(Context context) {
         this.context = context;
     }
+
 
     @Override
     public int getCount() {
@@ -49,6 +49,7 @@ public class CustomGridAdapter extends BaseAdapter {
 
             grid = inflater.inflate(R.layout.grid_cell, null);
             ImageView imageView = (ImageView)grid.findViewById(R.id.image);
+            //Log.v("Loaded into View ", i + ": " + movieItems.get(i).getTitle());
             String url = "http://image.tmdb.org/t/p/w500/" + movieItems.get(i).imageurl;
             Glide.with(context)
                  .load(url)
@@ -60,11 +61,9 @@ public class CustomGridAdapter extends BaseAdapter {
 
     }
 
-    public void addItem() {
-        movieItems.add(
-                movieItems.size(),
-                movieItems.get(0)
-        );
+    public void updateItems(ArrayList<MovieItem> movieItems) {
+        this.movieItems = movieItems;
+        notifyDataSetChanged();
     }
 
 }
