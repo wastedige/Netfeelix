@@ -10,9 +10,11 @@ public abstract class InfiniteScrollListener implements AbsListView.OnScrollList
     private int bufferItemCount = 10;
     private int currentPage = 0;
     private int itemCount = 0;
+    long time;
     private boolean isLoading = true;
 
     public InfiniteScrollListener(int bufferItemCount) {
+        time = System.currentTimeMillis();
         this.bufferItemCount = bufferItemCount;
     }
 
@@ -30,7 +32,7 @@ public abstract class InfiniteScrollListener implements AbsListView.OnScrollList
             this.itemCount = totalItemCount;
             if (totalItemCount == 0) {
                 this.isLoading = true;
-                Log.v("Infinite-isLoading", "P" + (currentPage + 1) + " total " + totalItemCount);
+                Log.d("Infinite-isLoading", "P" + (currentPage + 1) + " total " + totalItemCount);
             }
         }
 
@@ -38,12 +40,13 @@ public abstract class InfiniteScrollListener implements AbsListView.OnScrollList
             isLoading = false;
             itemCount = totalItemCount;
             currentPage++;
-            Log.v("Infinite-Set Page", "Page is now " + (currentPage) + " total " + totalItemCount);
+            Log.d("Infinite-Set Page", "Page is now " + (currentPage) + " total " + totalItemCount);
         }
 
-        if (!isLoading && (totalItemCount - visibleItemCount)<=(firstVisibleItem + bufferItemCount)) {
-            Log.v("Infinite-LoadMore", "total" + totalItemCount + " visible" + visibleItemCount );
-            Log.v("Infinite-LoadMore", "firstVis" + firstVisibleItem + " buffer" + bufferItemCount );
+        if ( (!isLoading && (totalItemCount - visibleItemCount)<=(firstVisibleItem + bufferItemCount)) && (System.currentTimeMillis() - time > 500)) {
+            Log.d("Infinite-LoadMore", "total" + totalItemCount + " visible" + visibleItemCount );
+            Log.d("Infinite-LoadMore", "firstVis" + firstVisibleItem + " buffer" + bufferItemCount );
+            time = System.currentTimeMillis();
             loadMore(currentPage + 1, totalItemCount);
             isLoading = true;
 

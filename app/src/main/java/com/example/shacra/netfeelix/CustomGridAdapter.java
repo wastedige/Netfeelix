@@ -19,8 +19,9 @@ public class CustomGridAdapter extends BaseAdapter {
     private ArrayList<MovieItem> movieItems = new ArrayList<>();
     Context context;
 
-    public CustomGridAdapter(Context context) {
+    public CustomGridAdapter(Context context, ArrayList<MovieItem> movieItems) {
         this.context = context;
+        this.movieItems = movieItems;
     }
 
 
@@ -42,21 +43,21 @@ public class CustomGridAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View grid;
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
 
         if (view == null) {
-
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             grid = inflater.inflate(R.layout.grid_cell, null);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.image);
-            //Log.v("Loaded into View ", i + ": " + movieItems.get(i).getTitle());
-            String url = "http://image.tmdb.org/t/p/w500/" + movieItems.get(i).imageurl;
-            Glide.with(context)
-                 .load(url)
-                 .into(imageView);
         } else {
             grid = view;
         }
+        ImageView imageView = (ImageView)grid.findViewById(R.id.image);
+        //Log.v("Loaded into View ", i + ": " + movieItems.get(i).getTitle());
+        String url = "http://image.tmdb.org/t/p/w500/" + movieItems.get(i).imageurl;
+        Glide.with(context)
+                .load(url)
+                .into(imageView);
         return grid;
 
     }

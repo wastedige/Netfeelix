@@ -28,11 +28,11 @@ public class MovieDetailActivity extends Activity {
         detailed_text_overview = (TextView) findViewById(R.id.detailed_text_overview);
 
         Intent intent = getIntent();
-        showMovieDetails(new String[] {
+        showMovieDetails(
                 intent.getStringExtra("url"),
                 intent.getStringExtra("title"),
                 intent.getStringExtra("overview")
-        });
+        );
 
     }
 

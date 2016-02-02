@@ -59,10 +59,12 @@ public class MainActivityFragment extends Fragment {
         switch (item.toString()) {
             case "Popularity":
                 Log.v("OPTIONS", "Popularity");
+                movieItems = new ArrayList<>(); // list has to get reloaded from scratch!
                 fetcher = new FetchMovieTask(currentContext, grid, callback);
                 fetcher.execute("sort_by=popularity.desc");
                 return true;
             case "Highest R rated":
+                movieItems = new ArrayList<>(); // list has to get reloaded from scratch!
                 fetcher = new FetchMovieTask(currentContext, grid, callback);
                 fetcher.execute("certification_country=US&certification=R&sort_by=vote_average.desc");
                 Log.v("OPTIONS", "Highest R rated");
@@ -84,7 +86,7 @@ public class MainActivityFragment extends Fragment {
         grid = (GridView) fragView.findViewById(R.id.gridview);
         currentContext = getActivity();
 
-        custom_adapter = new CustomGridAdapter(currentContext);
+        custom_adapter = new CustomGridAdapter(currentContext, movieItems);
         grid.setAdapter(custom_adapter);
 
         fetcher = new FetchMovieTask(currentContext, grid, callback);
