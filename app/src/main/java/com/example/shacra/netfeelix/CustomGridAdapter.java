@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by shacra on 12/31/2015.
  */
+
 public class CustomGridAdapter extends BaseAdapter {
     private ArrayList<MovieItem> movieItems = new ArrayList<>();
     Context context;
@@ -23,7 +23,6 @@ public class CustomGridAdapter extends BaseAdapter {
         this.context = context;
         this.movieItems = movieItems;
     }
-
 
     @Override
     public int getCount() {
@@ -43,21 +42,26 @@ public class CustomGridAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View grid;
-
+        ViewHolderItem viewHolder;
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             grid = inflater.inflate(R.layout.grid_cell, null);
+            // Set ViewHolder to be used on future calls
+
+            viewHolder = new ViewHolderItem(grid);
+            grid.setTag(viewHolder);
         } else {
             grid = view;
+            viewHolder = (ViewHolderItem) view.getTag();
         }
-        ImageView imageView = (ImageView)grid.findViewById(R.id.image);
+        // ImageView imageView = (ImageView)grid.findViewById(R.id.image);
         //Log.v("Loaded into View ", i + ": " + movieItems.get(i).getTitle());
-        String url = "http://image.tmdb.org/t/p/w500/" + movieItems.get(i).imageurl;
+        String url = "http://image.tmdb.org/t/p/w154/" + movieItems.get(i).imageurl;
         Glide.with(context)
                 .load(url)
-                .into(imageView);
+                .into( viewHolder.imageViewHolder );
         return grid;
 
     }
