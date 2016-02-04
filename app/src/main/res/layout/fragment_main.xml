@@ -9,9 +9,8 @@
         android:layout_width="match_parent"
         android:id="@+id/gridview"
         android:numColumns="2"
-        android:columnWidth="200dp"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
+        android:verticalSpacing="1dp"
+        android:horizontalSpacing="2dp"
         android:stretchMode="columnWidth"
         xmlns:android="http://schemas.android.com/apk/res/android">
 

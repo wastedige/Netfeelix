@@ -1,9 +1,12 @@
 package com.example.shacra.netfeelix;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 
 import com.bumptech.glide.Glide;
@@ -17,12 +20,21 @@ import java.util.ArrayList;
 
 public class CustomGridAdapter extends BaseAdapter {
     private ArrayList<MovieItem> movieItems = new ArrayList<>();
+    int placeholderHeight, placeholderWidth;
     Context context;
 
     public CustomGridAdapter(Context context, ArrayList<MovieItem> movieItems) {
         this.context = context;
         this.movieItems = movieItems;
+        // calculate thumbnail size
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        placeholderWidth = size.x / 2 ;
+        placeholderHeight = size.x * 213 / 154 / 2;
     }
+
 
     @Override
     public int getCount() {
@@ -58,10 +70,13 @@ public class CustomGridAdapter extends BaseAdapter {
         }
         // ImageView imageView = (ImageView)grid.findViewById(R.id.image);
         //Log.v("Loaded into View ", i + ": " + movieItems.get(i).getTitle());
-        String url = "http://image.tmdb.org/t/p/w154/" + movieItems.get(i).imageurl;
+        String url = "http://image.tmdb.org/t/p/w342/" + movieItems.get(i).imageurl;
         Glide.with(context)
                 .load(url)
-                .into( viewHolder.imageViewHolder );
+                .override(placeholderWidth, placeholderHeight)
+                .centerCrop()
+                .placeholder(R.drawable.loading_big)
+                .into(viewHolder.imageViewHolder);
         return grid;
 
     }

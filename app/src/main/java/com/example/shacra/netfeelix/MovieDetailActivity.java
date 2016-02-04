@@ -23,7 +23,6 @@ public class MovieDetailActivity extends Activity {
         setContentView(R.layout.activity_movie_detail);
 
         detailed_image = (ImageView) findViewById(R.id.detailed_image);
-        rating_image = (ImageView) findViewById(R.id.rating_image);
         detailed_text_title = (TextView) findViewById(R.id.detailed_text_title);
         detailed_text_overview = (TextView) findViewById(R.id.detailed_text_overview);
 

@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/action_favorite"
-        android:icon="@drawable/sort"
+        android:icon="@drawable/sort_icon"
         android:title="Sort"
         app:showAsAction="ifRoom">
 

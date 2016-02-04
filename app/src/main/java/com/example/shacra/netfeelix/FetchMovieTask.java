@@ -58,7 +58,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieItem>
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
 //                    .appendQueryParameter(SORT, "popularity.desc")
-                    .appendQueryParameter(APPID_PARAM, "+++06a222d2879f3102f48bcb46e629de99")
+                    .appendQueryParameter(APPID_PARAM, "06a222d2879f3102f48bcb46e629de99")
                     .build();
 
             URL url = new URL(builtUri.toString());
